@@ -1,0 +1,101 @@
+runtime:
+  name: JARVIS-OS
+  host: 127.0.0.1
+  port: 31888
+
+secrets:
+  # JARVIS never writes imported secrets into this project.
+  # Runtime priority:
+  # 1. JARVIS_* environment variables
+  # 2. configs/secrets.local.yaml, ignored by git
+  # 3. OpenClaw local config, when enabled below
+  # 4. empty value, causing model calls to return a clear setup error
+  importFromOpenClaw: true
+
+models:
+  chat:
+    provider: moonshot
+    model: kimi-k2.6
+    baseUrl: https://api.moonshot.cn/v1
+    envKey: JARVIS_MOONSHOT_API_KEY
+    timeoutMs: 60000
+    maxTokens: 2048
+    thinking: disabled
+  embedding:
+    provider: volcengine
+    model: doubao-embedding-vision-251215
+    baseUrl: https://ark.cn-beijing.volces.com/api/v3
+    envKey: JARVIS_VOLCENGINE_API_KEY
+    dimensions: 2048
+    timeoutMs: 30000
+
+initiative:
+  tickMs: 5000
+  defaultMode: quiet
+  notifyThreshold: 0.55
+  executeThreshold: 0.78
+
+perception:
+  tickMs: 10000
+  memoryWarningFreeRatio: 0.12
+  eventImportance: 0.25
+
+reflection:
+  tickMs: 15000
+  chatLatencyWarningMs: 8000
+
+modelRouting:
+  fastLatencyTargetMs: 2000
+  slowLatencyWarningMs: 8000
+  sampleWindow: 20
+
+voice:
+  enabled: true
+  provider: windows-sapi
+  # 输入优先走本地 faster-whisper ASR；Windows SAPI 保留为设备级兜底。
+  asrProvider: faster-whisper
+  asrModel: large-v3-turbo
+  asrDevice: cuda
+  asrComputeType: int8_float16
+  asrTimeoutMs: 300000
+  asrCacheDir: data/asr-model-cache
+  asrCudaDllDirs: []
+  fallbackToWindowsAsr: true
+  # 输出优先走 Edge Neural TTS；Windows SAPI 保留为离线兜底。
+  ttsProvider: msedge-tts
+  ttsVoice: zh-CN-XiaoxiaoNeural
+  ttsRate: default
+  ttsVolume: default
+  ttsPitch: default
+  ttsTimeoutMs: 20000
+  audioCacheDir: data/audio-cache
+  fallbackToSapi: true
+  language: zh-CN
+  rate: 0
+  volume: 85
+  maxChars: 1200
+  listenTimeoutMs: 7000
+
+safety:
+  autoAllowLevels: [L0, L1]
+  confirmLevels: [L2, L3]
+  blockLevels: [L4]
+
+toolRuntime:
+  allowedRoots: ["."]
+  excludedSegments: [node_modules, dist, data, .pnpm-store, .git]
+  maxReadBytes: 200000
+  searchLimit: 50
+  commandTimeoutMs: 30000
+
+storage:
+  eventLogPath: data/events/events.jsonl
+  auditLogPath: data/audit/audit.jsonl
+  memoryLogPath: data/memory/memories.jsonl
+  memoryVaultDir: data/memory-vault
+  conversationDir: data/conversations
+  actionLogPath: data/actions/actions.jsonl
+  notificationLogPath: data/notifications/notifications.jsonl
+  reminderLogPath: data/reminders/reminders.jsonl
+  worldModelPath: data/world/world-model.json
+  reflectionLogPath: data/reflection/reflections.jsonl

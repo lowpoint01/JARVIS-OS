@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JARVIS-OS 控制台</title>
+    <link rel="stylesheet" href="/cockpit/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero panel">
+        <div class="hero-copy">
+          <p class="eyebrow">本地智能操作层</p>
+          <h1>JARVIS-OS 控制台</h1>
+          <p class="subtle">
+            这里集中展示对话、长期记忆、企业就绪、模型链路、语音、主动循环、通知、审批、提醒和事件流。
+            所有状态均来自本机网关实时接口。
+          </p>
+          <div class="hero-actions">
+            <button id="refreshButton" type="button">刷新全部数据</button>
+            <button id="wakeButton" type="button">主动唤醒</button>
+            <button id="briefingButton" type="button">生成态势简报</button>
+          </div>
+        </div>
+        <div class="status-grid">
+          <article>
+            <span>连接状态</span>
+            <strong id="connectionState">未连接</strong>
+          </article>
+          <article>
+            <span>自检状态</span>
+            <strong id="selfStatus">等待检查</strong>
+          </article>
+          <article>
+            <span>企业就绪</span>
+            <strong id="enterpriseScore">-</strong>
+          </article>
+          <article>
+            <span>已注册工具</span>
+            <strong id="toolCount">-</strong>
+          </article>
+          <article>
+            <span>长期记忆</span>
+            <strong id="memoryCount">-</strong>
+          </article>
+          <article>
+            <span>待审批动作</span>
+            <strong id="queueCount">-</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="grid cockpit-grid">
+        <section class="chat panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">会话</p>
+              <h2>直接对话通道</h2>
+            </div>
+            <div class="head-actions">
+              <button id="dictateButton" type="button">语音输入</button>
+              <button id="realtimeVoiceButton" type="button">开启实时语音对话</button>
+              <button id="speakButton" type="button">朗读上一条回复</button>
+            </div>
+          </div>
+          <div id="realtimeVoiceStatus" class="realtime-voice-status" aria-live="polite">
+            实时语音：未开启。开启后会持续监听、自动断句、自动转写、自动对话并朗读回复。
+          </div>
+          <div id="messages" class="messages" aria-live="polite"></div>
+          <form id="chatForm" class="composer">
+            <input id="messageInput" autocomplete="off" placeholder="向 JARVIS 提问，或输入你想让它记住的内容..." />
+            <button type="submit">发送</button>
+          </form>
+        </section>
+
+        <aside class="side">
+          <section class="panel">
+            <div class="panel-head compact">
+              <div>
+                <p class="eyebrow">企业门禁</p>
+                <h2>就绪报告</h2>
+              </div>
+              <span id="enterpriseStatus" class="pill">等待数据</span>
+            </div>
+            <div id="readinessChecks" class="stack dense"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head compact">
+              <div>
+                <p class="eyebrow">态势</p>
+                <h2>当前简报</h2>
+              </div>
+            </div>
+            <div id="briefing" class="stack"></div>
+          </section>
+        </aside>
+      </section>
+
+      <section class="grid overview-grid">
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">运行时</p>
+              <h2>核心组件</h2>
+            </div>
+            <span id="uptimeValue" class="pill">-</span>
+          </div>
+          <div id="componentGrid" class="metric-grid"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">模型链路</p>
+              <h2>Kimi 与向量模型</h2>
+            </div>
+          </div>
+          <div id="modelStatus" class="stack dense"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">本地语音</p>
+              <h2>麦克风与扬声器</h2>
+            </div>
+          </div>
+          <div id="voiceStatus" class="stack dense"></div>
+        </section>
+      </section>
+
+      <section class="grid lower">
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">主动层</p>
+              <h2>循环状态</h2>
+            </div>
+          </div>
+          <div id="loopStatus" class="stack dense"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">长期记忆</p>
+              <h2>最近记忆</h2>
+            </div>
+          </div>
+          <div id="memories" class="stack memory-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">世界模型</p>
+              <h2>实体与关系</h2>
+            </div>
+          </div>
+          <div id="worldStatus" class="stack dense"></div>
+        </section>
+      </section>
+
+      <section class="grid lower">
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">通知</p>
+              <h2>未读事项</h2>
+            </div>
+            <span id="notificationCount" class="pill">0 条</span>
+          </div>
+          <div id="notifications" class="stack"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">动作</p>
+              <h2>审批队列</h2>
+            </div>
+          </div>
+          <div id="actions" class="stack"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">提醒</p>
+              <h2>时间挂钩</h2>
+            </div>
+            <span id="reminderCount" class="pill">0 个</span>
+          </div>
+          <form id="reminderForm" class="mini-form">
+            <input id="reminderTitle" placeholder="提醒标题" />
+            <input id="reminderMinutes" type="number" min="1" value="5" placeholder="分钟" />
+            <input id="reminderMessage" placeholder="提醒内容" />
+            <button type="submit">安排提醒</button>
+          </form>
+          <div id="reminders" class="stack"></div>
+        </section>
+      </section>
+
+      <section class="grid lower">
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">工具</p>
+              <h2>能力目录</h2>
+            </div>
+          </div>
+          <div id="toolCatalog" class="tool-catalog"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">反思层</p>
+              <h2>经验沉淀</h2>
+            </div>
+          </div>
+          <div id="reflectionStatus" class="stack dense"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">事件流</p>
+              <h2>实时脉搏</h2>
+            </div>
+          </div>
+          <div id="events" class="events"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/cockpit/app.js" type="module"></script>
+  </body>
+</html>

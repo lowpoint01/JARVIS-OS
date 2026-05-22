@@ -1,0 +1,38 @@
+{
+  "name": "jarvis-os",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "A proactive, self-aware-at-the-system-level personal AI operating layer.",
+  "scripts": {
+    "dev:gateway": "tsx src/gateway/server.ts",
+    "start:gateway": "node dist/gateway/server.js",
+    "service:start": "powershell -ExecutionPolicy Bypass -File scripts/start-gateway.ps1",
+    "service:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-gateway.ps1",
+    "service:status": "powershell -ExecutionPolicy Bypass -File scripts/status-gateway.ps1",
+    "service:restart": "pnpm service:stop && pnpm service:start",
+    "voice:start": "powershell -ExecutionPolicy Bypass -File scripts/start-voice-conversation.ps1",
+    "voice:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-voice-conversation.ps1",
+    "voice:status": "powershell -ExecutionPolicy Bypass -File scripts/status-voice-conversation.ps1",
+    "check:runtime": "node scripts/full-check.mjs",
+    "check:backend": "pnpm build && node scripts/backend-audit.mjs",
+    "check:enterprise": "pnpm check:full && pnpm check:backend",
+    "check:full": "pnpm build && pnpm test && pnpm check:runtime",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "check": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "msedge-tts": "2.0.5",
+    "ws": "^8.18.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/ws": "^8.5.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

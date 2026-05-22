@@ -1,0 +1,17 @@
+﻿tools:
+  system.health:
+    riskLevel: L0
+  events.recent:
+    riskLevel: L0
+  model.chat:
+    riskLevel: L1
+  embedding.embed:
+    riskLevel: L1
+  notification.send:
+    riskLevel: L1
+  filesystem.read:
+    riskLevel: L0
+  filesystem.write:
+    riskLevel: L2
+  powershell.run:
+    riskLevel: L3

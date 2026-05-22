@@ -1,0 +1,17 @@
+node_modules/
+dist/
+data/
+.pnpm-store/
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+
+# Local secrets must never be committed.
+configs/secrets.local.yaml
+configs/secrets.local.json
+.env
+.env.*
