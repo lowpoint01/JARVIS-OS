@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "A proactive, self-aware-at-the-system-level personal AI operating layer.",
+  "description": "一个具备主动性、长期记忆、工具调用、实时语音和自检能力的本地个人 AI 操作层。",
   "scripts": {
     "dev:gateway": "tsx src/gateway/server.ts",
     "start:gateway": "node dist/gateway/server.js",
